@@ -26,7 +26,7 @@ function Subscribers() {
   async function del(id: string) {
     if (!confirm("Remove subscriber?")) return;
     const { error } = await supabase.from("newsletter_subscribers").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["subscribers"] });
   }
 

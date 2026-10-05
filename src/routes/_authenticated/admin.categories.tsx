@@ -21,19 +21,19 @@ function Row({ c, onDone }: { c?: Cat; onDone: () => void }) {
   const set = (k: keyof typeof v) => (e: React.ChangeEvent<HTMLInputElement>) => setV({ ...v, [k]: e.target.value });
 
   async function save() {
-    if (!v.name_sv || !v.slug) return toast.error("Slug and Swedish name are required");
+    if (!v.name_sv || !v.slug) { toast.error("Slug and Swedish name are required"); return; }
     const payload = { ...v, name_en: v.name_en || v.name_sv, sort_order: Number(v.sort_order) || 0 };
     const { error } = c
       ? await supabase.from("categories").update(payload).eq("id", c.id)
       : await supabase.from("categories").insert(payload);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Saved");
     onDone();
   }
   async function del() {
     if (!c || !confirm("Delete category?")) return;
     const { error } = await supabase.from("categories").delete().eq("id", c.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onDone();
   }
 
