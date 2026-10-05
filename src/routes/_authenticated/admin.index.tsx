@@ -22,8 +22,8 @@ function AdminProducts() {
   });
 
   async function toggle(id: string, field: "is_published" | "is_featured", value: boolean) {
-    const { error } = await supabase.from("products").update({ [field]: value }).eq("id", id);
-    if (error) return toast.error(error.message);
+    const { error } = await supabase.from("products").update(field === "is_published" ? { is_published: value } : { is_featured: value }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries();
   }
 

@@ -91,7 +91,7 @@ function EditProduct() {
   }
 
   async function save() {
-    if (!f.name_sv.trim()) return toast.error("Swedish name is required");
+    if (!f.name_sv.trim()) { toast.error("Swedish name is required"); return; }
     setSaving(true);
     const payload = {
       slug: f.slug.trim() || slugify(f.name_sv),
@@ -107,7 +107,7 @@ function EditProduct() {
     const res = isNew
       ? await supabase.from("products").insert(payload).select("id").single()
       : await supabase.from("products").update(payload).eq("id", id).select("id").single();
-    if (res.error) { setSaving(false); return toast.error(res.error.message); }
+    if (res.error) { setSaving(false); { toast.error(res.error.message); return; } }
     const pid = res.data.id;
     await supabase.from("product_categories").delete().eq("product_id", pid);
     if (cats.length) await supabase.from("product_categories").insert(cats.map((c) => ({ product_id: pid, category_id: c })));
@@ -120,7 +120,7 @@ function EditProduct() {
   async function remove() {
     if (!confirm("Delete this product?")) return;
     const { error } = await supabase.from("products").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     qc.invalidateQueries();
     navigate({ to: "/admin" });
   }
