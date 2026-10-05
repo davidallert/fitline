@@ -1,14 +1,34 @@
-# Welcome to your Lovable project
+# FitLine Power Hub
+
+Create a website for FitLine (https://www.fitline.com/se/sv-se).
+
+Vision
+I'm creating a promotional affiliate website for FitLine, where I will redirect customers to FitLine's official site. The goal is to make people understand the benefits of the product, and entice people into purchasing their products.
+
+Aesthetic
+Clean, healthy, fresh, modern.
+Use FitLine's main red color #cd0039 for accents and buttons to create a connection to their site.
+
+Requirements / functionality
+- Backend admin dashboard where products, images and links can be managed.
+- Persistant database storage.
+- Newsletter sign-up.
+- Connect it to a real database where products and signed-up users are stored.
+- Frontend storefront in the style I described earlier. Include product pages, categories and a home page.
+
+Ask any questions you need before building.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://fitline-now.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/43f840ee-ae40-4128-9450-e52350a6e0a8).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +40,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
