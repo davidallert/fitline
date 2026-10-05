@@ -1,23 +1,5 @@
 # FitLine Power Hub
 
-Create a website for FitLine (https://www.fitline.com/se/sv-se).
-
-Vision
-I'm creating a promotional affiliate website for FitLine, where I will redirect customers to FitLine's official site. The goal is to make people understand the benefits of the product, and entice people into purchasing their products.
-
-Aesthetic
-Clean, healthy, fresh, modern.
-Use FitLine's main red color #cd0039 for accents and buttons to create a connection to their site.
-
-Requirements / functionality
-- Backend admin dashboard where products, images and links can be managed.
-- Persistant database storage.
-- Newsletter sign-up.
-- Connect it to a real database where products and signed-up users are stored.
-- Frontend storefront in the style I described earlier. Include product pages, categories and a home page.
-
-Ask any questions you need before building.
-
 This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://fitline-now.lovable.app
