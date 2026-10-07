@@ -8,28 +8,58 @@ import { ProductCard, formatPrice } from "@/components/site/ProductCard";
 import { productQuery, productsQuery } from "@/lib/queries";
 import { pick, useLang } from "@/lib/i18n";
 import { productBuyUrl } from "@/config/site";
+import { langLinks, ogLocale, ogUrl, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/products/$slug")({
   loader: async ({ context, params }) => {
     const product = await context.queryClient.ensureQueryData(productQuery(params.slug));
     if (!product) throw notFound();
     await context.queryClient.ensureQueryData(productsQuery());
-    return { name: product.name_sv, tagline: product.tagline_sv, image: product.image_url };
+    return { product };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const lang = params.lang === "en" ? "en" : "sv";
     if (!loaderData) return { meta: [{ title: "Produkten hittades inte – FitLine" }, { name: "robots", content: "noindex" }] };
+    const p = loaderData.product;
+    const name = pick(p, "name", lang);
+    const desc = pick(p, "tagline", lang);
+    const path = `/products/${p.slug}`;
+    const images = [p.image_url, ...p.gallery].filter((u): u is string => !!u && u.startsWith("https://"));
     const meta = [
-      { title: `${loaderData.name} – FitLine` },
-      { name: "description", content: loaderData.tagline ?? "" },
-      { property: "og:title", content: `${loaderData.name} – FitLine` },
-      { property: "og:description", content: loaderData.tagline ?? "" },
+      { title: `${name} – FitLine` },
+      { name: "description", content: desc },
+      { property: "og:title", content: `${name} – FitLine` },
+      { property: "og:description", content: desc },
       { property: "og:type", content: "product" },
+      ogUrl(lang, path),
+      ogLocale(lang),
       { name: "twitter:card", content: "summary_large_image" },
     ];
-    if (loaderData.image?.startsWith("https://")) {
-      meta.push({ property: "og:image", content: loaderData.image }, { name: "twitter:image", content: loaderData.image });
+    if (images[0]) meta.push({ property: "og:image", content: images[0] }, { name: "twitter:image", content: images[0] });
+    const ld: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name,
+      description: pick(p, "description", lang) || desc,
+      image: images,
+      sku: p.article_number ?? undefined,
+      brand: { "@type": "Brand", name: "FitLine" },
+      url: `${SITE_URL}/${lang}${path}`,
+    };
+    if (p.price != null) {
+      ld.offers = {
+        "@type": "Offer",
+        price: Number(p.price),
+        priceCurrency: "SEK",
+        availability: "https://schema.org/InStock",
+        url: productBuyUrl(p),
+      };
     }
-    return { meta };
+    return {
+      meta,
+      links: langLinks(lang, path),
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+    };
   },
   notFoundComponent: NotFound,
   errorComponent: NotFound,
@@ -76,7 +106,7 @@ function ProductPage() {
               <div className="mt-4 flex gap-3">
                 {images.map((src, i) => (
                   <button key={src} onClick={() => setActiveImg(i)} className={`size-20 overflow-hidden rounded-xl border-2 bg-product p-1 ${i === activeImg ? "border-primary" : "border-transparent"}`}>
-                    <img src={src} alt="" className="size-full object-contain" />
+                    <img src={src} alt={`${pick(product, "name", lang)} – ${lang === "sv" ? "bild" : "image"} ${i + 1}`} className="size-full object-contain" />
                   </button>
                 ))}
               </div>

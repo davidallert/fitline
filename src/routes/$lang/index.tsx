@@ -6,20 +6,43 @@ import { SiteLayout } from "@/components/site/SiteChrome";
 import { ProductCard } from "@/components/site/ProductCard";
 import { categoriesQuery, productsQuery } from "@/lib/queries";
 import { pick, useLang } from "@/lib/i18n";
+import { langLinks, ogLocale, ogUrl, SITE_URL } from "@/lib/seo";
 import hero from "@/assets/hero.jpg";
 import lifestyle from "@/assets/lifestyle.jpg";
 
 export const Route = createFileRoute("/$lang/")({
-  head: () => ({
-    meta: [
-      { title: "FitLine – Premiumtillskott med NTC® | Partner" },
-      { name: "description", content: "Upptäck FitLines premiumtillskott med patenterad NTC®-teknik för energi, återhämtning och välmående." },
-      { property: "og:title", content: "FitLine – Premiumtillskott med NTC®" },
-      { property: "og:description", content: "Energi, återhämtning och välmående inifrån. Utforska FitLines produkter." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: ({ params }) => {
+    const lang = params.lang === "en" ? "en" : "sv";
+    const title = lang === "sv" ? "FitLine – Premiumtillskott med NTC® | Partner" : "FitLine – Premium supplements with NTC® | Partner";
+    const desc = lang === "sv"
+      ? "Upptäck FitLines premiumtillskott med patenterad NTC®-teknik för energi, återhämtning och välmående."
+      : "Discover FitLine premium supplements with patented NTC® technology for energy, recovery and wellbeing.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "website" },
+        ogUrl(lang, "/"),
+        ogLocale(lang),
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: langLinks(lang, "/"),
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              { "@type": "Organization", "@id": `${SITE_URL}/#org`, name: "FitLine Partner", url: SITE_URL, sameAs: ["https://www.fitline.com/se/sv-se"] },
+              { "@type": "WebSite", "@id": `${SITE_URL}/#site`, name: "FitLine Partner", url: `${SITE_URL}/${lang}`, inLanguage: lang, publisher: { "@id": `${SITE_URL}/#org` } },
+            ],
+          }),
+        },
+      ],
+    };
+  },
   loader: ({ context }) =>
     Promise.all([
       context.queryClient.ensureQueryData(productsQuery(true)),
@@ -36,7 +59,7 @@ function Home() {
   return (
     <SiteLayout>
       <section className="relative overflow-hidden">
-        <img src={hero} alt="" width={1600} height={1008} className="absolute inset-0 size-full object-cover object-right" />
+        <img src={hero} alt={lang === "sv" ? "FitLine Optimal-Set PowerCocktail och Restorate – premiumtillskott med NTC®" : "FitLine Optimal Set PowerCocktail and Restorate – premium supplements with NTC®"} width={1600} height={1008} className="absolute inset-0 size-full object-cover object-right" />
         <div className="absolute inset-0 bg-hero-fade" />
         <div className="container-site relative py-24 md:py-36">
           <div className="max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -107,7 +130,7 @@ function Home() {
 
       <section id="why" className="bg-fresh-soft">
         <div className="container-site grid items-center gap-12 py-20 md:grid-cols-2">
-          <img src={lifestyle} alt="" loading="lazy" width={1200} height={1408} className="aspect-[4/5] w-full rounded-3xl object-cover shadow-soft" />
+          <img src={lifestyle} alt={lang === "sv" ? "Aktiv kvinna som dricker FitLine-tillskott för energi och välmående" : "Active woman drinking a FitLine supplement for energy and wellbeing"} loading="lazy" width={1200} height={1408} className="aspect-[4/5] w-full rounded-3xl object-cover shadow-soft" />
           <div>
             <h2 className="text-4xl font-bold">{t("ntc_title")}</h2>
             <p className="mt-4 text-lg text-muted-foreground">{t("ntc_body")}</p>

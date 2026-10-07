@@ -5,24 +5,44 @@ import { SiteLayout } from "@/components/site/SiteChrome";
 import { ProductCard } from "@/components/site/ProductCard";
 import { categoriesQuery, productsQuery } from "@/lib/queries";
 import { pick, useLang } from "@/lib/i18n";
+import { langLinks, ogLocale, ogUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/$lang/products/")({
   validateSearch: z.object({ category: z.string().optional() }),
-  head: () => ({
-    meta: [
-      { title: "Produkter – FitLine tillskott & hudvård" },
-      { name: "description", content: "Hela FitLine-sortimentet: optimal tillgång, träning, skönhet, viktkontroll och särskilda behov." },
-      { property: "og:title", content: "FitLine-produkter" },
-      { property: "og:description", content: "Utforska FitLines tillskott och hudvård per kategori." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  loader: ({ context }) =>
-    Promise.all([
+  loaderDeps: ({ search }) => ({ category: search.category }),
+  head: ({ params, loaderData }) => {
+    const lang = params.lang === "en" ? "en" : "sv";
+    const cat = loaderData?.category;
+    const name = cat ? pick(cat, "name", lang) : null;
+    const title = name
+      ? `FitLine ${name} – ${lang === "sv" ? "tillskott & produkter" : "supplements & products"}`
+      : lang === "sv" ? "Produkter – FitLine tillskott & hudvård" : "Products – FitLine supplements & skincare";
+    const desc = (cat && pick(cat, "description", lang)) ||
+      (lang === "sv"
+        ? "Hela FitLine-sortimentet: optimal tillgång, träning, skönhet, viktkontroll och särskilda behov."
+        : "The full FitLine range: optimal supply, fitness, beauty, weight management and special needs.");
+    const path = cat ? `/products?category=${cat.slug}` : "/products";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "website" },
+        ogUrl(lang, path),
+        ogLocale(lang),
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: langLinks(lang, path),
+    };
+  },
+  loader: async ({ context, deps }) => {
+    const [, categories] = await Promise.all([
       context.queryClient.ensureQueryData(productsQuery()),
       context.queryClient.ensureQueryData(categoriesQuery()),
-    ]),
+    ]);
+    return { category: categories.find((c) => c.slug === deps.category) ?? null };
+  },
   component: ProductsPage,
 });
 
