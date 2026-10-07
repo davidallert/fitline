@@ -28,17 +28,17 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
       <div className="container-site flex h-16 items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold">
+        <Link to="/$lang" params={{ lang }} className="flex items-center gap-2 font-display text-lg font-bold">
           <span className="grid size-8 place-items-center rounded-full bg-primary text-primary-foreground">
             <Leaf className="size-4" />
           </span>
           FitLine<span className="text-primary">.</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-medium md:flex">
-          <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }} className="hover:text-primary">
+          <Link to="/$lang" params={{ lang }} activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }} className="hover:text-primary">
             {t("nav_home")}
           </Link>
-          <Link to="/products" activeProps={{ className: "text-primary" }} className="hover:text-primary">
+          <Link to="/$lang/products" params={{ lang }} activeProps={{ className: "text-primary" }} className="hover:text-primary">
             {t("nav_products")}
           </Link>
         </nav>

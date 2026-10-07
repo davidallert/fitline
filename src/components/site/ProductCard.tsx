@@ -12,8 +12,8 @@ export function ProductCard({ product }: { product: Product }) {
   const { lang, t } = useLang();
   return (
     <Link
-      to="/products/$slug"
-      params={{ slug: product.slug }}
+      to="/$lang/products/$slug"
+      params={{ lang, slug: product.slug }}
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all hover:-translate-y-1 hover:border-primary/30"
     >
       <div className="relative aspect-square bg-product p-6">

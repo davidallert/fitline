@@ -9,7 +9,7 @@ import { pick, useLang } from "@/lib/i18n";
 import hero from "@/assets/hero.jpg";
 import lifestyle from "@/assets/lifestyle.jpg";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/$lang/")({
   head: () => ({
     meta: [
       { title: "FitLine – Premiumtillskott med NTC® | Partner" },
@@ -47,7 +47,7 @@ function Home() {
             <p className="mt-5 text-lg text-muted-foreground">{t("hero_sub")}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild variant="cta" size="xl">
-                <Link to="/products">{t("hero_cta")} <ArrowRight /></Link>
+                <Link to="/$lang/products" params={{ lang }}>{t("hero_cta")} <ArrowRight /></Link>
               </Button>
               <Button asChild variant="pill" size="xl">
                 <a href="#why">{t("hero_secondary")}</a>
@@ -80,7 +80,7 @@ function Home() {
           {categories.map((c) => (
             <Link
               key={c.id}
-              to="/products"
+              to="/$lang/products" params={{ lang }}
               search={{ category: c.slug }}
               className="rounded-full border border-border bg-card px-5 py-3 font-semibold shadow-soft transition-colors hover:border-primary hover:text-primary"
             >
@@ -96,7 +96,7 @@ function Home() {
             <h2 className="text-3xl font-bold md:text-4xl">{t("featured_title")}</h2>
             <p className="mt-2 text-muted-foreground">{t("featured_sub")}</p>
           </div>
-          <Link to="/products" className="hidden items-center gap-1 font-semibold text-primary sm:flex">
+          <Link to="/$lang/products" params={{ lang }} className="hidden items-center gap-1 font-semibold text-primary sm:flex">
             {t("view_all")} <ArrowRight className="size-4" />
           </Link>
         </div>
@@ -130,7 +130,7 @@ function Home() {
               })}
             </div>
             <Button asChild variant="cta" size="xl" className="mt-10">
-              <Link to="/products">{t("hero_cta")} <ArrowRight /></Link>
+              <Link to="/$lang/products" params={{ lang }}>{t("hero_cta")} <ArrowRight /></Link>
             </Button>
           </div>
         </div>

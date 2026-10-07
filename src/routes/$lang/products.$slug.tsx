@@ -9,7 +9,7 @@ import { productQuery, productsQuery } from "@/lib/queries";
 import { pick, useLang } from "@/lib/i18n";
 import { productBuyUrl } from "@/config/site";
 
-export const Route = createFileRoute("/products/$slug")({
+export const Route = createFileRoute("/$lang/products/$slug")({
   loader: async ({ context, params }) => {
     const product = await context.queryClient.ensureQueryData(productQuery(params.slug));
     if (!product) throw notFound();
@@ -41,7 +41,7 @@ function NotFound() {
     <SiteLayout>
       <div className="container-site py-32 text-center">
         <h1 className="text-3xl font-bold">Produkten hittades inte / Product not found</h1>
-        <Link to="/products" className="mt-6 inline-block font-semibold text-primary">← Produkter</Link>
+        <Link to="/$lang/products" params={{ lang }} className="mt-6 inline-block font-semibold text-primary">← Produkter</Link>
       </div>
     </SiteLayout>
   );
@@ -63,7 +63,7 @@ function ProductPage() {
   return (
     <SiteLayout>
       <div className="container-site py-10">
-        <Link to="/products" className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary">
+        <Link to="/$lang/products" params={{ lang }} className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary">
           <ArrowLeft className="size-4" /> {t("back")}
         </Link>
         <div className="mt-6 grid gap-12 lg:grid-cols-2">

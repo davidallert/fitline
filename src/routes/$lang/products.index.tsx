@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { categoriesQuery, productsQuery } from "@/lib/queries";
 import { pick, useLang } from "@/lib/i18n";
 
-export const Route = createFileRoute("/products/")({
+export const Route = createFileRoute("/$lang/products/")({
   validateSearch: z.object({ category: z.string().optional() }),
   head: () => ({
     meta: [
@@ -44,9 +44,9 @@ function ProductsPage() {
           <h1 className="text-4xl font-bold md:text-5xl">{active ? pick(active, "name", lang) : t("all_products")}</h1>
           <p className="mt-3 max-w-xl text-muted-foreground">{active ? pick(active, "description", lang) : t("products_sub")}</p>
           <div className="mt-8 flex flex-wrap gap-2">
-            <Link to="/products" search={{}} className={chip(!active)}>{t("all_products")}</Link>
+            <Link to="/$lang/products" params={{ lang }} search={{}} className={chip(!active)}>{t("all_products")}</Link>
             {categories.map((c) => (
-              <Link key={c.id} to="/products" search={{ category: c.slug }} className={chip(active?.id === c.id)}>
+              <Link key={c.id} to="/$lang/products" params={{ lang }} search={{ category: c.slug }} className={chip(active?.id === c.id)}>
                 {pick(c, "name", lang)}
               </Link>
             ))}
