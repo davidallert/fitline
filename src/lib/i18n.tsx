@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
 export type Lang = "sv" | "en";
 
@@ -104,18 +105,24 @@ export type DictKey = keyof (typeof dict)["sv"];
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: DictKey) => string };
 const LangContext = createContext<Ctx | null>(null);
 
+export function langFromPath(pathname: string): Lang {
+  return pathname.split("/")[1] === "en" ? "en" : "sv";
+}
+
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("sv");
-  useEffect(() => {
-    const stored = window.localStorage.getItem("lang");
-    if (stored === "sv" || stored === "en") setLangState(stored);
-  }, []);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.searchStr });
+  const navigate = useNavigate();
+  const lang = langFromPath(pathname);
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
   const setLang = (l: Lang) => {
-    setLangState(l);
-    window.localStorage.setItem("lang", l);
+    const parts = pathname.split("/");
+    if (parts[1] === "sv" || parts[1] === "en") {
+      parts[1] = l;
+      navigate({ href: parts.join("/") + (search ?? "") });
+    } else navigate({ to: "/$lang", params: { lang: l } });
   };
   return (
     <LangContext.Provider value={{ lang, setLang, t: (k) => dict[lang][k] }}>
