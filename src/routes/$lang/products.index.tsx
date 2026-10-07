@@ -10,6 +10,13 @@ import { langLinks, ogLocale, ogUrl } from "@/lib/seo";
 export const Route = createFileRoute("/$lang/products/")({
   validateSearch: z.object({ category: z.string().optional() }),
   loaderDeps: ({ search }) => ({ category: search.category }),
+  loader: async ({ context, deps }) => {
+    const [, categories] = await Promise.all([
+      context.queryClient.ensureQueryData(productsQuery()),
+      context.queryClient.ensureQueryData(categoriesQuery()),
+    ]);
+    return { category: categories.find((c) => c.slug === deps.category) ?? null };
+  },
   head: ({ params, loaderData }) => {
     const lang = params.lang === "en" ? "en" : "sv";
     const cat = loaderData?.category;
@@ -35,13 +42,6 @@ export const Route = createFileRoute("/$lang/products/")({
       ],
       links: langLinks(lang, path),
     };
-  },
-  loader: async ({ context, deps }) => {
-    const [, categories] = await Promise.all([
-      context.queryClient.ensureQueryData(productsQuery()),
-      context.queryClient.ensureQueryData(categoriesQuery()),
-    ]);
-    return { category: categories.find((c) => c.slug === deps.category) ?? null };
   },
   component: ProductsPage,
 });

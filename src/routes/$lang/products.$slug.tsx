@@ -47,10 +47,10 @@ export const Route = createFileRoute("/$lang/products/$slug")({
       url: `${SITE_URL}/${lang}${path}`,
     };
     if (p.price != null) {
-      ld.offers = {
+      ld["offers"] = {
         "@type": "Offer",
         price: Number(p.price),
-        priceCurrency: "SEK",
+        priceCurrency: p.currency || "SEK",
         availability: "https://schema.org/InStock",
         url: productBuyUrl(p),
       };
