@@ -9,23 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as LangIndexRouteImport } from './routes/$lang/index'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as ProductsIndexRouteImport } from './routes/products.index'
-import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
+import { Route as LangProductsIndexRouteImport } from './routes/$lang/products.index'
+import { Route as LangProductsSlugRouteImport } from './routes/$lang/products.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminAdminsRouteImport } from './routes/_authenticated/admin.admins'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminSubscribersRouteImport } from './routes/_authenticated/admin.subscribers'
 import { Route as AuthenticatedAdminProductsIdRouteImport } from './routes/_authenticated/admin.products.$id'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -35,19 +30,24 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangIndexRoute = LangIndexRouteImport.update({
+  id: '/$lang/',
+  path: '/$lang/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ProductsIndexRoute = ProductsIndexRouteImport.update({
-  id: '/products/',
-  path: '/products/',
+const LangProductsIndexRoute = LangProductsIndexRouteImport.update({
+  id: '/$lang/products/',
+  path: '/$lang/products/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProductsSlugRoute = ProductsSlugRouteImport.update({
-  id: '/products/$slug',
-  path: '/products/$slug',
+const LangProductsSlugRoute = LangProductsSlugRouteImport.update({
+  id: '/$lang/products/$slug',
+  path: '/$lang/products/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
@@ -81,39 +81,41 @@ const AuthenticatedAdminProductsIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/products/$slug': typeof ProductsSlugRoute
-  '/products/': typeof ProductsIndexRoute
+  '/$lang/': typeof LangIndexRoute
+  '/$lang/products/$slug': typeof LangProductsSlugRoute
   '/admin/admins': typeof AuthenticatedAdminAdminsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/$lang/products/': typeof LangProductsIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/products/$slug': typeof ProductsSlugRoute
-  '/products': typeof ProductsIndexRoute
+  '/$lang': typeof LangIndexRoute
+  '/$lang/products/$slug': typeof LangProductsSlugRoute
   '/admin/admins': typeof AuthenticatedAdminAdminsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/$lang/products': typeof LangProductsIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/products/$slug': typeof ProductsSlugRoute
-  '/products/': typeof ProductsIndexRoute
+  '/$lang/': typeof LangIndexRoute
+  '/$lang/products/$slug': typeof LangProductsSlugRoute
   '/_authenticated/admin/admins': typeof AuthenticatedAdminAdminsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/subscribers': typeof AuthenticatedAdminSubscribersRoute
+  '/$lang/products/': typeof LangProductsIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/products/$id': typeof AuthenticatedAdminProductsIdRoute
 }
@@ -123,56 +125,51 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/admin'
-    | '/products/$slug'
-    | '/products/'
+    | '/$lang/'
+    | '/$lang/products/$slug'
     | '/admin/admins'
     | '/admin/categories'
     | '/admin/subscribers'
+    | '/$lang/products/'
     | '/admin/'
     | '/admin/products/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
-    | '/products/$slug'
-    | '/products'
+    | '/$lang'
+    | '/$lang/products/$slug'
     | '/admin/admins'
     | '/admin/categories'
     | '/admin/subscribers'
+    | '/$lang/products'
     | '/admin'
     | '/admin/products/$id'
   id:
     | '__root__'
-    | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/admin'
-    | '/products/$slug'
-    | '/products/'
+    | '/$lang/'
+    | '/$lang/products/$slug'
     | '/_authenticated/admin/admins'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/subscribers'
+    | '/$lang/products/'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/products/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  ProductsSlugRoute: typeof ProductsSlugRoute
-  ProductsIndexRoute: typeof ProductsIndexRoute
+  LangIndexRoute: typeof LangIndexRoute
+  LangProductsSlugRoute: typeof LangProductsSlugRoute
+  LangProductsIndexRoute: typeof LangProductsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
@@ -187,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/': {
+      id: '/$lang/'
+      path: '/$lang'
+      fullPath: '/$lang/'
+      preLoaderRoute: typeof LangIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -194,18 +198,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/products/': {
-      id: '/products/'
-      path: '/products'
-      fullPath: '/products/'
-      preLoaderRoute: typeof ProductsIndexRouteImport
+    '/$lang/products/': {
+      id: '/$lang/products/'
+      path: '/$lang/products'
+      fullPath: '/$lang/products/'
+      preLoaderRoute: typeof LangProductsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/products/$slug': {
-      id: '/products/$slug'
-      path: '/products/$slug'
-      fullPath: '/products/$slug'
-      preLoaderRoute: typeof ProductsSlugRouteImport
+    '/$lang/products/$slug': {
+      id: '/$lang/products/$slug'
+      path: '/$lang/products/$slug'
+      fullPath: '/$lang/products/$slug'
+      preLoaderRoute: typeof LangProductsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
@@ -277,11 +281,11 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  ProductsSlugRoute: ProductsSlugRoute,
-  ProductsIndexRoute: ProductsIndexRoute,
+  LangIndexRoute: LangIndexRoute,
+  LangProductsSlugRoute: LangProductsSlugRoute,
+  LangProductsIndexRoute: LangProductsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -24,7 +24,7 @@ function LangSwitch() {
 }
 
 export function Header() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
       <div className="container-site flex h-16 items-center justify-between gap-4">

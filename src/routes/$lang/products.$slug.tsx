@@ -37,6 +37,7 @@ export const Route = createFileRoute("/$lang/products/$slug")({
 });
 
 function NotFound() {
+  const { lang } = useLang();
   return (
     <SiteLayout>
       <div className="container-site py-32 text-center">
